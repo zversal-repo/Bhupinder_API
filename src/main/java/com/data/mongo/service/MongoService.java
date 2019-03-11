@@ -103,7 +103,7 @@ public class MongoService {
 			}
 		} catch (Exception e) {
 			System.out.println("NO DOCUMENT OR CHECK KEYS CAREFULLY");
-			System.out.println(0);
+			
 		}
 
 	}
