@@ -75,12 +75,12 @@ public class MongoService {
 
 	}
 
-	private MongoCursor<Document> find(BasicDBObject basic, String[] include) throws NullPointerException {
-		MongoCursor<Document> itr= null;
+	private MongoCursor<Document> find(BasicDBObject basic, String[] include) {
+		
 		
 		FindIterable<Document> document = collection.find(basic)
 				.projection(Projections.fields(Projections.include(include), Projections.excludeId()));
-		itr = document.iterator();
+		MongoCursor<Document> itr = document.iterator();
 		
 		
 
@@ -101,7 +101,7 @@ public class MongoService {
 
 				}
 			}
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			System.out.println("NO DOCUMENT OR CHECK KEYS CAREFULLY");
 			
 		}
@@ -114,9 +114,9 @@ public class MongoService {
 		return doc;
 	}
 
-	public List<Object> getTicker(String channel) throws NullPointerException {
+	public List<String> getTicker(String channel)  {
 		
-		List<Object> listDoc= null;
+		List<String> listDoc= null;
 		
 		BasicDBObject basic = new BasicDBObject("Channel", channel);
 		String[] include = { "Ticker" };
@@ -134,8 +134,8 @@ public class MongoService {
 
 		while (itr.hasNext()) {
 
-			Map<String, Object> mdoc = itr.next();
-			listDoc.add(mdoc.get("Ticker"));
+			Map<String,Object> mdoc = itr.next();
+			listDoc.add( (String) mdoc.get("Ticker"));
 
 		}
 		
@@ -147,7 +147,7 @@ public class MongoService {
 		return listDoc;
 	}
 
-	public Object getEarningData(String ticker) throws NullPointerException {
+	public Document getEarningData(String ticker)  {
 		// TODO Auto-generated method stub
 
 		String[] keys = { "ZN3", "ZN1", "Z2B" };
@@ -174,7 +174,7 @@ public class MongoService {
 		MongoCursor<Document> itr = find(basic, keys);
 		Document doc = null;
 		while (itr.hasNext()) {
-			doc = itr.next();
+			 doc = itr.next();
 		}
 		removeDoc(keys, array, doc);
 
@@ -199,11 +199,14 @@ public class MongoService {
 			doc = itr.next();
 		}
 
-		String[] array = { "SIC Code", "Company URL", "M-Industry Industry Description", "Exchange Traded Code",
-				"Unique ID", "Sector Description" };
-		for (int i = 0; i < array.length; i++) {
-			((Document) doc.get("CZ2")).remove(array[i]);
-		}
+		String[][] array = {{ "SIC Code", "Company URL", "M-Industry Industry Description", "Exchange Traded Code",
+				"Unique ID", "Sector Description" }};
+		String[] keys = {"CZ2"};
+		removeDoc(keys,array,doc);
+		/*
+		 * for (int i = 0; i < array.length; i++) { ((Document)
+		 * doc.get("CZ2")).remove(array[i]); } return doc;
+		 */
 		return doc;
 
 	}

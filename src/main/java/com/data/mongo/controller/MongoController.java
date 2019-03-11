@@ -32,8 +32,8 @@ public class MongoController {
 		}
 	
 	@RequestMapping(value="/ticker/{Channel}",method=RequestMethod.GET)
-	public List<Object> getTicker(@PathVariable ("Channel") String channel) {
-		List<Object> doc = null;
+	public List<String> getTicker(@PathVariable ("Channel") String channel) {
+		List<String> doc = null;
 		try {
 		 doc = mongoservice.getTicker(channel);
 	    
@@ -44,10 +44,10 @@ public class MongoController {
 		return doc;
 	}
 	@RequestMapping(value="/earning/{Ticker}",method=RequestMethod.GET)
-	public Object getEarningData(@PathVariable("Ticker") String ticker) {
+	public Document getEarningData(@PathVariable("Ticker") String ticker) {
 		
 		
-	   Object  doc = mongoservice.getEarningData(ticker);
+	   Document  doc = mongoservice.getEarningData(ticker);
 		
 		
 		
