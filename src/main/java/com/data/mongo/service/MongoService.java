@@ -41,8 +41,7 @@ public class MongoService {
 	private MongoDatabase database = null;
 
 	private MongoCollection<Document> collection = null;
-	// private static MongoCollection<Document> newcollection
-	// =database.getCollection("new");
+	
 
 	public MongoService() {
 
@@ -139,11 +138,6 @@ public class MongoService {
 
 		}
 		
-	/*
-	 * catch(NullPointerException npe) {
-	 * System.out.println("Null Pointer Exception"); }
-	 */
-
 		return listDoc;
 	}
 

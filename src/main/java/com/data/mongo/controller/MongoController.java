@@ -33,14 +33,11 @@ public class MongoController {
 	
 	@RequestMapping(value="/ticker/{Channel}",method=RequestMethod.GET)
 	public List<String> getTicker(@PathVariable ("Channel") String channel) {
-		List<String> doc = null;
-		try {
-		 doc = mongoservice.getTicker(channel);
+		
+		
+		List<String> doc = mongoservice.getTicker(channel);
 	    
-		}
-		catch(NullPointerException npe) {
-			System.out.println("Null Pointer Exception");
-		}
+		
 		return doc;
 	}
 	@RequestMapping(value="/earning/{Ticker}",method=RequestMethod.GET)
