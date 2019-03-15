@@ -57,6 +57,12 @@ public class MongoController {
 		Document doc = mongoservice.getSnapshot(ticker);
 		return doc;
 	}
+	
+	@RequestMapping(value="/keystatsandfinancial/{Ticker}",method=RequestMethod.GET)
+	public Document getsStats(@PathVariable("Ticker") String ticker) {
+	       Document doc = mongoservice.getStats(ticker);
+		return doc;
 	}
+}
 	
 

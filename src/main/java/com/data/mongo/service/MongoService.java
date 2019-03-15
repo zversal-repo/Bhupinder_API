@@ -3,8 +3,10 @@ package com.data.mongo.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bson.Document;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,7 @@ public class MongoService {
 	private String connectionString = null;
 	private String mycollections = null;
 
-	private MongoClientURI connection = null;
+//	private MongoClientURI connection = null;
 
 	private MongoClient mongoClient = null;
 	private MongoDatabase database = null;
@@ -50,9 +52,9 @@ public class MongoService {
 			this.connectionString = mongoConfig.getUri();
 			this.mycollections = mongoConfig.getCollection();
 
-			this.connection = new MongoClientURI(connectionString);
+		//	this.connection = new MongoClientURI(connectionString);
 
-			this.mongoClient = MongoClients.create();
+			this.mongoClient = MongoClients.create(connectionString);
 
 			this.database = mongoClient.getDatabase(databaseName);
 
@@ -80,6 +82,7 @@ public class MongoService {
 		FindIterable<Document> document = collection.find(basic)
 				.projection(Projections.fields(Projections.include(include), Projections.excludeId()));
 		MongoCursor<Document> itr = document.iterator();
+		
 		
 		
 
@@ -204,4 +207,82 @@ public class MongoService {
 		return doc;
 
 	}
+
+	public Document getStats(String ticker) {
+		// TODO Auto-generated method stub
+		Document doc=new Document();
+		String[] includePrice= {"ZK3.Current Price","ZK3.52 week high","ZK3.Avg daily","ZK3.Beta","ZK3.52 week low"};
+		String[] includeShare= {"ZK3.Market cap"};
+	    String[] includeDivident= {"ZK3.Frwd Div yield","ZK3.Indicated Annual dividend","CZ1.Book value of common equity/shares outstanding for most recent completed fiscal year period",
+	    		                  "DVR.Dividend - Most Recent Ex-Date","DVR.Dividend - Most Recent Pay Date"};
+	    String[] includeValuation= {"CZ1.Current Price/most currt available qtrly book value per common share","CZ1.Quarter Sales growth % where Q(0)  and Q(-1) are Sales for last reported quarter and 1 quarters before the last reported quarter",
+	    		                   "CZ1.Current Price/most current available annual cash flow per common share"};
+	    String[] includeMGMT= {"ZK3.Return on equity(Latest QTR)","ZK3.Return on Assets(Latest QTR)","ZK3.Return on investment(latest QTR)"};  	
+	    String[] includePerShare= {"ZK3.Cash Flow"};
+	    String[] includeProfitability= {"ZK3.Pretax margin(12 months)","ZK3.Operating Margin(12 Months)","ZK3.Net Margin(12 months)"};
+		
+	    Map<String,String[]> map= new HashMap<>();
+		map.put("Price And Volume",includePrice);
+		map.put("Share Related Items", includeShare);
+		map.put("Divident Information", includeDivident);
+		map.put("Valuation Ratio", includeValuation) ;
+		map.put("Per Share Data",includePerShare);
+		map.put("MGMT",includeMGMT);
+		map.put("Profitability",includeProfitability);
+		
+	  
+		Iterator mapiterator = map.entrySet().iterator();
+	    BasicDBObject basic = new BasicDBObject("Ticker",ticker);
+	   
+	    
+	  while(mapiterator.hasNext()) {
+
+		    Map.Entry<String,String[]> mapElement=(Map.Entry) mapiterator.next();
+		    MongoCursor<Document> itrMongo=find(basic,((String[])mapElement.getValue()));
+		   // System.out.println(itrMongo);
+		    Document appendDoc=new Document();
+		    appendDoc=null;
+		    while(itrMongo.hasNext()) {
+		    	 appendDoc=itrMongo.next();
+		    	 //System.out.println(appendDoc);
+		    }
+		 
+		    if(appendDoc!=null) {
+		    doc.append(mapElement.getKey().toString(), appendDoc);}
+		    
+		    else {
+		    	doc=null;
+		    }
+		    
+		    
+		    
+	  }
+	    
+		/*
+		 * BasicDBObject basic= new BasicDBObject("Ticker",ticker);
+		 * MongoCursor<Document> itrPrice=find(basic,includePrice);
+		 * MongoCursor<Document> itrShare=find(basic,includeShare);
+		 * 
+		 * Document docPrice= new Document(); Document docShare= new Document();
+		 * 
+		 * while(itrPrice.hasNext() || itrShare.hasNext()) { if(itrPrice.hasNext()) {
+		 * docPrice=itrPrice.next(); } if(itrShare.hasNext()) {
+		 * docShare=itrShare.next();
+		 * 
+		 * }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * 
+		 * Document completedoc= new Document(); completedoc.put("Price And Volume",
+		 * docPrice); completedoc.append("Share Related Item", docShare);
+		 * 
+		 * return completedoc;
+		 */
+	  return doc;
+	}
 }
+
+ 
