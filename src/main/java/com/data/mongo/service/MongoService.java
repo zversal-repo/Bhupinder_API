@@ -1,25 +1,15 @@
 package com.data.mongo.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.bson.Document;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import com.data.mongo.config.MongoConfig;
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClientURI;
-import com.mongodb.MongoException;
-import com.mongodb.MongoSocketOpenException;
-import com.mongodb.MongoTimeoutException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
