@@ -76,9 +76,8 @@ public class MongoService {
     }
 
     public List<Object> getTicker(String channel)  {
-	Document basic = new Document("Channel", channel);
 	String[] include = { "Ticker" };
-	MongoCursor<Document> itr = findDoc(basic, include).iterator();
+	MongoCursor<Document> itr = findDoc(new Document("Channel", channel), include).iterator();
 	List<Object> listDoc = new ArrayList<>();
 	while (itr.hasNext()) {
 	    Map<String,Object> mdoc = itr.next();
