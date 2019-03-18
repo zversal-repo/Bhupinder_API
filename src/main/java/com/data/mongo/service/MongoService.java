@@ -9,7 +9,6 @@ import java.util.Map;
 import org.bson.Document;
 import org.springframework.stereotype.Service;
 import com.data.mongo.config.MongoConfig;
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -24,7 +23,6 @@ public class MongoService {
     private String databaseName = null;
     private String connectionString = null;
     private String mycollections = null;
-//  private MongoClientURI connection = null;
     private MongoClient mongoClient = null;
     private MongoDatabase database = null;
     private MongoCollection<Document> collection = null;
@@ -43,11 +41,11 @@ public class MongoService {
         } 
     }
 
-    private MongoCursor<Document> find(Document basic, String[] include) {
-	FindIterable<Document> document = collection.find(basic)
+    private FindIterable<Document> findDoc(Document basic, String[] include) {
+	FindIterable<Document> document= collection.find(basic)
 				          .projection(Projections.fields(Projections.include(include), Projections.excludeId()));
-	MongoCursor<Document> itr = document.iterator();
-        return itr;
+	//MongoCursor<Document> itr = document.iterator();
+        return document;
     }
 
     private void removeDoc(String[] keys, String[][] array, Document doc) {
@@ -72,22 +70,20 @@ public class MongoService {
     }
 
     public Document getData(String ticker) {
-	FindIterable<Document> document = collection.find(new BasicDBObject("Ticker", ticker));
-	Document doc = document.first();
+	FindIterable<Document> document = collection.find(new Document("Ticker", ticker));
+	Document doc= document.first();
 	return doc;
     }
 
     public List<Object> getTicker(String channel)  {
-	List<Object> listDoc= null;
 	Document basic = new Document("Channel", channel);
 	String[] include = { "Ticker" };
-	MongoCursor<Document> itr = find(basic, include);
-	listDoc = new ArrayList<>();
+	MongoCursor<Document> itr = findDoc(basic, include).iterator();
+	List<Object> listDoc = new ArrayList<>();
 	while (itr.hasNext()) {
 	    Map<String,Object> mdoc = itr.next();
 	    listDoc.add(mdoc.get("Ticker"));
 	}
-		
 	return listDoc;
     }
 
@@ -99,36 +95,24 @@ public class MongoService {
 			      "Long Term Growth High", "Next FY %Growth", "No. of LTG", "Current FY %Growth",
 			      "Two QTRs ACtual EPS", "Last FY Actual EPS", "Long Term Growth Low" },
 			    { "KEY 25", "KEY 26", "KEY 27", "KEY 28", "KEY 29", "KEY 30", "KEY31", "KEY32", "KEY33", "Company" }};
-	Document basic = new Document("Ticker", ticker);
-	MongoCursor<Document> itr = find(basic, keys);
-	Document doc = null;
-	while (itr.hasNext()) {
-	    doc = itr.next();
-	}
+	//Document basic = new Document("Ticker", ticker);
+	Document doc = findDoc(new Document("Ticker", ticker),keys).first();
 	removeDoc(keys, array, doc);
 	return doc;
     }
 
     public Document getSnapshot(String ticker) {
 	String[] include={"CZ2","CZ3","ZK3.Market cap","CZ1.No of Employees"}; 
-        Document basic= new Document("Ticker",ticker);
-        MongoCursor<Document> itr = find(basic,include);
-        Document doc = null;
-        
-	while (itr.hasNext()) {
-	    doc = itr.next();
-	}
-	
+       // Document basic= new Document("Ticker",ticker);
+        Document doc = findDoc(new Document("Ticker",ticker),include).first();
 	String[][] array = {{ "SIC Code", "Company URL", "M-Industry Industry Description", "Exchange Traded Code",
 			      "Unique ID", "Sector Description" }};
 	String[] keys = {"CZ2"};
-	
 	removeDoc(keys,array,doc);
 	return doc;
-
     }
+    
     public Document getStats(String ticker) {
-	    // TODO Auto-generated method stub
 	Document doc=new Document();
 	String[] includePrice= {"ZK3.Current Price","ZK3.52 week high","ZK3.Avg daily","ZK3.Beta","ZK3.52 week low"};
 	String[] includeShare= {"ZK3.Market cap"};
@@ -150,25 +134,20 @@ public class MongoService {
 	map.put("Profitability",includeProfitability);
 		
 	Iterator<Map.Entry<String,String[]>> mapiterator = map.entrySet().iterator();
-	Document basic =new Document("Ticker",ticker);
 	while(mapiterator.hasNext()) {
 	    Map.Entry<String,String[]> mapElement=mapiterator.next();
-	    MongoCursor<Document> itrMongo=find(basic,(mapElement.getValue()));
-	    Document appendDoc=new Document();
-	    appendDoc=null;
-	    while(itrMongo.hasNext()) {
-		appendDoc=itrMongo.next();
-	    }
-	    if(appendDoc!=null) {
-		doc.append(mapElement.getKey().toString(), appendDoc);
-	    }
-		    
-	    else {
-		doc=null;
-	    }
+	    Document appendDoc = findDoc(new Document("Ticker",ticker),(mapElement.getValue())).first();
+	     if(appendDoc!=null) {
+		 doc.append(mapElement.getKey(),appendDoc); 
+	     }
+	     else { 
+		 doc=null;
+	     }
 	}
 	return doc;
     }
-}
+
+ }
+
 
  
