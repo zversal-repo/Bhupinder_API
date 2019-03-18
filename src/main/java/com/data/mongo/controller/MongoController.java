@@ -13,38 +13,35 @@ import com.data.mongo.service.MongoService;
 public class MongoController {
     @Autowired
     private MongoService mongoservice;
-    
-   
-    @RequestMapping(value="/data/{Ticker}",method=RequestMethod.GET)
-    public Document getData(@PathVariable ("Ticker") String ticker) {
-	Document doc = mongoservice.getData(ticker );
+
+    @RequestMapping(value = "/data/{Ticker}", method = RequestMethod.GET)
+    public Document getData(@PathVariable("Ticker") String ticker) {
+	Document doc = mongoservice.getData(ticker);
 	return doc;
     }
-	
-    @RequestMapping(value="/ticker/{Channel}",method=RequestMethod.GET)
-    public List<Object> getTicker(@PathVariable ("Channel") String channel) {
+
+    @RequestMapping(value = "/ticker/{Channel}", method = RequestMethod.GET)
+    public List<Object> getTicker(@PathVariable("Channel") String channel) {
 	List<Object> doc = mongoservice.getTicker(channel);
 	return doc;
     }
-	
-    @RequestMapping(value="/earning/{Ticker}",method=RequestMethod.GET)
+
+    @RequestMapping(value = "/earning/{Ticker}", method = RequestMethod.GET)
     public Document getEarningData(@PathVariable("Ticker") String ticker) {
-	Document  doc = mongoservice.getEarningData(ticker);
+	Document doc = mongoservice.getEarningData(ticker);
 	return doc;
     }
-	
-    @RequestMapping(value="/snapshot/{Ticker}",method=RequestMethod.GET)
+
+    @RequestMapping(value = "/snapshot/{Ticker}", method = RequestMethod.GET)
     public Document getsnapshot(@PathVariable("Ticker") String ticker) {
 	Document doc = mongoservice.getSnapshot(ticker);
 	return doc;
     }
-	
-    @RequestMapping(value="/keystatsandfinancial/{Ticker}",method=RequestMethod.GET)
+
+    @RequestMapping(value = "/keystatsandfinancial/{Ticker}", method = RequestMethod.GET)
     public Document getsStats(@PathVariable("Ticker") String ticker) {
 	Document doc = mongoservice.getStats(ticker);
 	return doc;
     }
-   
-}
-	
 
+}
