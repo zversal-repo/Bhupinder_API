@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
-import com.data.mongo.error.ErrorInJson;
+import com.data.mongo.error.ErrorInfo;
 
 @RestController
 public class CustomErrorController implements ErrorController {
@@ -23,8 +23,8 @@ public class CustomErrorController implements ErrorController {
     private ErrorAttributes errorAttributes;
 
     @RequestMapping(value = PATH)
-    private ErrorInJson error(HttpServletResponse response, WebRequest webrequest) {
-	return new ErrorInJson(response.getStatus(), getErrorAttributes(webrequest, debug));
+    private ErrorInfo error(HttpServletResponse response, WebRequest webrequest) {
+	return new ErrorInfo(response.getStatus(), getErrorAttributes(webrequest, debug));
     }
 
     private Map<String, Object> getErrorAttributes(WebRequest webrequest, boolean includeStackTrace) {

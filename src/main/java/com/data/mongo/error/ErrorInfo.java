@@ -4,7 +4,7 @@ import java.util.Date;
 //import java.sql.Date;
 import java.util.Map;
 
-public class ErrorInJson {
+public class ErrorInfo {
 
     private int status;
     private String error;
@@ -12,7 +12,7 @@ public class ErrorInJson {
     private Date timeStamp;
     private String trace;
 
-    public ErrorInJson(int status, Map<String, Object> errorAttributes) {
+    public ErrorInfo(int status, Map<String, Object> errorAttributes) {
 	this.status = status;
 	this.error = (String) errorAttributes.get("error");
 	this.message = (String) errorAttributes.get("message");

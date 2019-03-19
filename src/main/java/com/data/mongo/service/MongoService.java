@@ -37,13 +37,22 @@ public class MongoService {
 	    collection = database.getCollection(mycollections);
 	} catch (IllegalArgumentException iae) {
 	    System.out.println("Illegal Argument Exception");
+	} catch (NullPointerException n) {
+	    System.out.println("Null Pointer Exception");
+
 	}
     }
 
     private FindIterable<Document> findDoc(Document basic, String[] include) {
-	FindIterable<Document> document = collection.find(basic)
+	FindIterable<Document> document = null;
+	try {
+              document = collection.find(basic)
 		.projection(Projections.fields(Projections.include(include), Projections.excludeId()));
 	// MongoCursor<Document> itr = document.iterator();
+	}
+	catch(NullPointerException n) {
+	    System.out.println("NullPointerException");
+	}
 	return document;
     }
 
@@ -72,15 +81,17 @@ public class MongoService {
 	return doc;
     }
 
-    public List<Object> getTicker(String channel) {
+    public Document getTicker(String channel) {
 	String[] include = { "Ticker" };
 	MongoCursor<Document> itr = findDoc(new Document("Channel", channel), include).iterator();
 	List<Object> listDoc = new ArrayList<>();
+	Document doc = new Document();
 	while (itr.hasNext()) {
-	    Map<String, Object> mdoc = itr.next();
+	    Document mdoc = itr.next();
 	    listDoc.add(mdoc.get("Ticker"));
 	}
-	return listDoc;
+	doc.put("Ticker",listDoc);
+	return doc;
     }
 
     public Document getEarningData(String ticker) {

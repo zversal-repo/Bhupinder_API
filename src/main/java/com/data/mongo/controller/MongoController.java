@@ -21,8 +21,8 @@ public class MongoController {
     }
 
     @RequestMapping(value = "/ticker/{Channel}", method = RequestMethod.GET)
-    public List<Object> getTicker(@PathVariable("Channel") String channel) {
-	List<Object> doc = mongoservice.getTicker(channel);
+    public Document getTicker(@PathVariable("Channel") String channel) {
+	Document doc = mongoservice.getTicker(channel);
 	return doc;
     }
 
