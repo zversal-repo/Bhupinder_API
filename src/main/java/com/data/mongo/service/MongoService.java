@@ -35,22 +35,20 @@ public class MongoService {
 	    mongoClient = MongoClients.create(connectionString);
 	    database = mongoClient.getDatabase(databaseName);
 	    collection = database.getCollection(mycollections);
-	} catch (IllegalArgumentException iae) {
-	    System.out.println("Illegal Argument Exception");
-	} catch (NullPointerException n) {
-	    System.out.println("Null Pointer Exception");
-
+	} 
+	catch (IllegalArgumentException iae) {
+	    System.out.println("database name is not valid");
+	    throw iae;
 	}
     }
 
     private FindIterable<Document> findDoc(Document basic, String[] include) {
 	FindIterable<Document> document = null;
 	try {
-              document = collection.find(basic)
-		.projection(Projections.fields(Projections.include(include), Projections.excludeId()));
-	// MongoCursor<Document> itr = document.iterator();
-	}
-	catch(NullPointerException n) {
+	    document = collection.find(basic)
+		    .projection(Projections.fields(Projections.include(include), Projections.excludeId()));
+	    // MongoCursor<Document> itr = document.iterator();
+	} catch (NullPointerException n) {
 	    System.out.println("NullPointerException");
 	}
 	return document;
@@ -90,7 +88,7 @@ public class MongoService {
 	    Document mdoc = itr.next();
 	    listDoc.add(mdoc.get("Ticker"));
 	}
-	doc.put("Ticker",listDoc);
+	doc.put("Ticker", listDoc);
 	return doc;
     }
 

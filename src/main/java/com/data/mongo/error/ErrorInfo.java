@@ -14,12 +14,10 @@ public class ErrorInfo {
 
     public ErrorInfo(int status, Map<String, Object> errorAttributes) {
 	this.status = status;
-	this.error = (String) errorAttributes.get("error");
-	this.message = (String) errorAttributes.get("message");
-	this.timeStamp = (Date) errorAttributes.get("timestamp");
-	this.trace = (String) errorAttributes.get("trace");
-	System.out.println("ERROR=" + this.error);
-	System.out.println("TRACE=" + this.trace);
+	error = (String) errorAttributes.get("error");
+	message = (String) errorAttributes.get("message");
+	timeStamp = (Date) errorAttributes.get("timestamp");
+	trace = (String) errorAttributes.get("trace");
     }
 
     public int getStatus() {

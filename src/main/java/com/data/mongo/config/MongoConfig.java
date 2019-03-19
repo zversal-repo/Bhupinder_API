@@ -18,7 +18,11 @@ public class MongoConfig implements EnvironmentAware {
     }
 
     public String getDatabaseName() {
-	return env.getProperty("mongo.database");
+	String databasename = env.getProperty("mongo.database");
+	if (databasename.isEmpty() == true) {
+	    throw new NullPointerException("databasename is empty");
+	}
+	return databasename;
     }
 
     public String getUri() {
