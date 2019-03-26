@@ -1,4 +1,4 @@
-package com.data.mongo.error;
+package com.zversal.api.error;
 
 import java.util.Date;
 //import java.sql.Date;

@@ -1,4 +1,4 @@
-package com.data.mongo.error;
+package com.zversal.api.error;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
@@ -9,7 +9,8 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
-import com.data.mongo.error.ErrorInfo;
+
+import com.zversal.api.error.ErrorInfo;
 
 @RestController
 public class CustomErrorController implements ErrorController {

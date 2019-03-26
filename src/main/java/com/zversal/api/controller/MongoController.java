@@ -1,4 +1,4 @@
-package com.data.mongo.controller;
+package com.zversal.api.controller;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,40 +7,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.data.mongo.service.MongoService;
+import com.zversal.api.service.FetchService;
 
 @RestController
 public class MongoController {
     @Autowired
-    private MongoService mongoservice;
+    private FetchService fetchservice;
 
     @RequestMapping(value = "/data/{Ticker}", method = RequestMethod.GET)
     public Document getData(@PathVariable("Ticker") String ticker) {
-	Document doc = mongoservice.getData(ticker);
+	Document doc = fetchservice.getData(ticker);
 	return doc;
     }
 
     @RequestMapping(value = "/ticker/{Channel}", method = RequestMethod.GET)
     public Document getTicker(@PathVariable("Channel") String channel) {
-	Document doc = mongoservice.getTicker(channel);
+	Document doc = fetchservice.getTicker(channel);
 	return doc;
     }
 
     @RequestMapping(value = "/earning/{Ticker}", method = RequestMethod.GET)
     public Document getEarningData(@PathVariable("Ticker") String ticker) {
-	Document doc = mongoservice.getEarningData(ticker);
+	Document doc = fetchservice.getEarningData(ticker);
 	return doc;
     }
 
     @RequestMapping(value = "/snapshot/{Ticker}", method = RequestMethod.GET)
     public Document getsnapshot(@PathVariable("Ticker") String ticker) {
-	Document doc = mongoservice.getSnapshot(ticker);
+	Document doc = fetchservice.getSnapshot(ticker);
 	return doc;
     }
 
     @RequestMapping(value = "/keystatsandfinancial/{Ticker}", method = RequestMethod.GET)
     public Document getsStats(@PathVariable("Ticker") String ticker) {
-	Document doc = mongoservice.getStats(ticker);
+	Document doc = fetchservice.getStats(ticker);
 	return doc;
     }
 
