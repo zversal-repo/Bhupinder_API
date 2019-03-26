@@ -1,39 +1,84 @@
 package com.zversal.api.database;
 
+
+import java.util.Set;
+
 import org.bson.Document;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
 import com.zversal.api.configuration.ConfigProperties;
 
 public class DatabaseConnection {
 	private ConfigProperties configproperties = new ConfigProperties();
 	private MongoCollection<Document> collection = null;
+	private MongoDatabase database = null;
 
 	private void connection() {
 		try {
+			System.out.println("Connection");
 			String databaseName = configproperties.getDatabaseName();
+			if (databaseName.isEmpty()) {
+				System.out.println("Database Name is Empty");
+				System.exit(1);
+			}
 			String connectionString = configproperties.getUri();
-			String mycollections = configproperties.getCollection();
+			if (connectionString.isEmpty()) {
+				System.out.println("Uri String is Empty");
+				System.exit(1);
+			}
+			String collectionName = configproperties.getCollection();
 
-			if (databaseName.isEmpty() || connectionString.isEmpty() || mycollections.isEmpty()) {
-				throw new NullPointerException();
+			if (collectionName.isEmpty()) {
+				System.out.println("Collection Name is Empty");
+				System.exit(1);
 			}
 
 			MongoClient mongoClient = MongoClients.create(connectionString);
 			MongoDatabase database = mongoClient.getDatabase(databaseName);
-			collection = database.getCollection(mycollections);
-		} catch (IllegalArgumentException iae) {
-			throw new IllegalArgumentException();
+			checkDatabase(mongoClient,databaseName);
+			collection = database.getCollection(collectionName);
+			checkCollection(database, collectionName);
+
+		} catch (IllegalArgumentException | NullPointerException e) {
+			// System.out.println("ERROR");
+			e.printStackTrace();
+			System.exit(1);
+
 		}
 	}
 
 	public MongoCollection<Document> getCollections() {
 		connection();
 		return collection;
+	}
 
+	private void checkCollection(MongoDatabase database, String collectionName) {
+		MongoIterable<String> collections = database.listCollectionNames();
+		for (String collectionname : collections) {
+
+			if (collectionname.equals(collectionName) == false) {
+				System.out.println("Collection not found");
+				System.exit(1);
+			}
+
+		}
+
+	}
+	private void checkDatabase(MongoClient mongoClient,String databaseName) {
+		 MongoCursor<String> dbsCursor = mongoClient.listDatabaseNames().iterator();
+		    while(dbsCursor.hasNext()) {
+		        if(dbsCursor.next().equals(databaseName)==false) {
+		        	System.out.println("database not found");
+		        	System.exit(1);
+		        }
+		           
+		    }
+		
 	}
 
 }

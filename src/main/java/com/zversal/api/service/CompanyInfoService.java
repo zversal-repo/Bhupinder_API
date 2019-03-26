@@ -3,12 +3,12 @@ package com.zversal.api.service;
 import org.bson.Document;
 import org.springframework.stereotype.Service;
 
-import com.zversal.api.database.DatabaseQuery;
+import com.zversal.api.database.DatabaseOperation;
 
 @Service
-public class FetchService {
+public class CompanyInfoService {
 
-	private DatabaseQuery databasequery = new DatabaseQuery();
+	private DatabaseOperation databasequery = new DatabaseOperation();
 
 	public Document getData(String ticker) {
 		return databasequery.getData(ticker);
@@ -23,7 +23,7 @@ public class FetchService {
 	}
 
 	public Document getSnapshot(String ticker) {
-		return databasequery.getEarningData(ticker);
+		return databasequery.getSnapshot(ticker);
 	}
 
 	public Document getStats(String ticker) {

@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zversal.api.service.FetchService;
+import com.zversal.api.service.CompanyInfoService;
 
 @RestController
-public class MongoController {
+public class CompanyInfoController {
     @Autowired
-    private FetchService fetchservice;
+    private CompanyInfoService fetchservice;
 
     @RequestMapping(value = "/data/{Ticker}", method = RequestMethod.GET)
     public Document getData(@PathVariable("Ticker") String ticker) {

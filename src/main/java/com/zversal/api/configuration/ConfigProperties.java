@@ -23,11 +23,13 @@ public class ConfigProperties implements EnvironmentAware {
 	}
 
 	public String getUri() {
-		return env.getProperty("mongo.uri");
+		String uri = env.getProperty("mongo.uri");
+		return uri;
 	}
 
 	public String getCollection() {
-		return env.getProperty("mongo.collection");
+		String collectionName = env.getProperty("mongo.collection");
+		return collectionName;
 	}
 
 }

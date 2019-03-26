@@ -11,13 +11,17 @@ import org.bson.Document;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
 
-public class DatabaseQuery {
+public class DatabaseOperation {
 	private DatabaseConnection connection = new DatabaseConnection();
+	
 	private MongoCollection<Document> collection = connection.getCollections();
+	
 
 	private FindIterable<Document> findDoc(Document basic, String[] include) {
+		
 		FindIterable<Document> document = null;
 		try {
 			document = collection.find(basic)
@@ -55,7 +59,7 @@ public class DatabaseQuery {
 	}
 
 	public Document getTicker(String channel) {
-		String[] include = { "Ticker" };
+		final String[] include = { "Ticker" };
 		MongoCursor<Document> itr = findDoc(new Document("Channel", channel), include).iterator();
 		List<Object> listDoc = new ArrayList<>();
 		Document doc = new Document();
@@ -68,8 +72,8 @@ public class DatabaseQuery {
 	}
 
 	public Document getEarningData(String ticker) {
-		String[] keys = { "ZN3", "ZN1", "Z2B" };
-		String[][] array = {
+		final String[] keys = { "ZN3", "ZN1", "Z2B" };
+		final String[][] array = {
 				{ "Four QTR prior end Date", "Four QTR prior EPS", "Four QTR prior EPS", "Actual EPS for Four QTR",
 						"Four QTR prior differnce", "Four QTR prior Surprise%" },
 				{ "Three QTRs Actual EPS", "Company", "Long Term Growth", "Current QTR %Growth", "Next QTR %Growth",
@@ -83,31 +87,31 @@ public class DatabaseQuery {
 	}
 
 	public Document getSnapshot(String ticker) {
-		String[] include = { "CZ2", "CZ3", "ZK3.Market cap", "CZ1.No of Employees" };
+		final String[] include = { "CZ2", "CZ3", "ZK3.Market cap", "CZ1.No of Employees" };
 		// Document basic= new Document("Ticker",ticker);
-		Document doc = findDoc(new Document("Ticker", ticker), include).first();
-		String[][] array = { { "SIC Code", "Company URL", "M-Industry Industry Description", "Exchange Traded Code",
-				"Unique ID", "Sector Description" } };
-		String[] keys = { "CZ2" };
+		final Document doc = findDoc(new Document("Ticker", ticker), include).first();
+		final String[][] array = { { "SIC Code", "Company URL", "M-Industry Industry Description",
+				"Exchange Traded Code", "Unique ID", "Sector Description" } };
+		final String[] keys = { "CZ2" };
 		removeDoc(keys, array, doc);
 		return doc;
 	}
 
 	public Document getStats(String ticker) {
 		Document doc = new Document();
-		String[] includePrice = { "ZK3.Current Price", "ZK3.52 week high", "ZK3.Avg daily", "ZK3.Beta",
+		final String[] includePrice = { "ZK3.Current Price", "ZK3.52 week high", "ZK3.Avg daily", "ZK3.Beta",
 				"ZK3.52 week low" };
-		String[] includeShare = { "ZK3.Market cap" };
-		String[] includeDivident = { "ZK3.Frwd Div yield", "ZK3.Indicated Annual dividend",
+		final String[] includeShare = { "ZK3.Market cap" };
+		final String[] includeDivident = { "ZK3.Frwd Div yield", "ZK3.Indicated Annual dividend",
 				"CZ1.Book value of common equity/shares outstanding for most recent completed fiscal year period",
 				"DVR.Dividend - Most Recent Ex-Date", "DVR.Dividend - Most Recent Pay Date" };
-		String[] includeValuation = { "CZ1.Current Price/most currt available qtrly book value per common share",
+		final String[] includeValuation = { "CZ1.Current Price/most currt available qtrly book value per common share",
 				"CZ1.Quarter Sales growth % where Q(0)  and Q(-1) are Sales for last reported quarter and 1 quarters before the last reported quarter",
 				"CZ1.Current Price/most current available annual cash flow per common share" };
-		String[] includeMGMT = { "ZK3.Return on equity(Latest QTR)", "ZK3.Return on Assets(Latest QTR)",
+		final String[] includeMGMT = { "ZK3.Return on equity(Latest QTR)", "ZK3.Return on Assets(Latest QTR)",
 				"ZK3.Return on investment(latest QTR)" };
-		String[] includePerShare = { "ZK3.Cash Flow" };
-		String[] includeProfitability = { "ZK3.Pretax margin(12 months)", "ZK3.Operating Margin(12 Months)",
+		final String[] includePerShare = { "ZK3.Cash Flow" };
+		final String[] includeProfitability = { "ZK3.Pretax margin(12 months)", "ZK3.Operating Margin(12 Months)",
 				"ZK3.Net Margin(12 months)" };
 
 		Map<String, String[]> map = new HashMap<>();
