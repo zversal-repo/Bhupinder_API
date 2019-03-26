@@ -16,12 +16,11 @@ import com.mongodb.client.model.Projections;
 
 public class DatabaseOperation {
 	private DatabaseConnection connection = new DatabaseConnection();
-	
+
 	private MongoCollection<Document> collection = connection.getCollections();
-	
 
 	private FindIterable<Document> findDoc(Document basic, String[] include) {
-		
+
 		FindIterable<Document> document = null;
 		try {
 			document = collection.find(basic)

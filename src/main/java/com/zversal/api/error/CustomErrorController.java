@@ -15,26 +15,26 @@ import com.zversal.api.error.ErrorInfo;
 @RestController
 public class CustomErrorController implements ErrorController {
 
-    private static final String PATH = "/error";
+	private static final String PATH = "/error";
 
-    @Value("${debug}")
-    private boolean debug;
+	@Value("${debug}")
+	private boolean debug;
 
-    @Autowired
-    private ErrorAttributes errorAttributes;
+	@Autowired
+	private ErrorAttributes errorAttributes;
 
-    @RequestMapping(value = PATH)
-    private ErrorInfo error(HttpServletResponse response, WebRequest webrequest) {
-	return new ErrorInfo(response.getStatus(), getErrorAttributes(webrequest, debug));
-    }
+	@RequestMapping(value = PATH)
+	private ErrorInfo error(HttpServletResponse response, WebRequest webrequest) {
+		return new ErrorInfo(response.getStatus(), getErrorAttributes(webrequest, debug));
+	}
 
-    private Map<String, Object> getErrorAttributes(WebRequest webrequest, boolean includeStackTrace) {
-	return errorAttributes.getErrorAttributes(webrequest, includeStackTrace);
-    }
+	private Map<String, Object> getErrorAttributes(WebRequest webrequest, boolean includeStackTrace) {
+		return errorAttributes.getErrorAttributes(webrequest, includeStackTrace);
+	}
 
-    @Override
-    public String getErrorPath() {
-	return PATH;
-    }
+	@Override
+	public String getErrorPath() {
+		return PATH;
+	}
 
 }

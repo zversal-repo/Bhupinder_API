@@ -1,6 +1,5 @@
 package com.zversal.api.database;
 
-
 import java.util.Set;
 
 import org.bson.Document;
@@ -40,7 +39,7 @@ public class DatabaseConnection {
 
 			MongoClient mongoClient = MongoClients.create(connectionString);
 			MongoDatabase database = mongoClient.getDatabase(databaseName);
-			checkDatabase(mongoClient,databaseName);
+
 			collection = database.getCollection(collectionName);
 			checkCollection(database, collectionName);
 
@@ -68,17 +67,6 @@ public class DatabaseConnection {
 
 		}
 
-	}
-	private void checkDatabase(MongoClient mongoClient,String databaseName) {
-		 MongoCursor<String> dbsCursor = mongoClient.listDatabaseNames().iterator();
-		    while(dbsCursor.hasNext()) {
-		        if(dbsCursor.next().equals(databaseName)==false) {
-		        	System.out.println("database not found");
-		        	System.exit(1);
-		        }
-		           
-		    }
-		
 	}
 
 }
