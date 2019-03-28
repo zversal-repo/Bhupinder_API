@@ -58,5 +58,4 @@ public class ErrorInfo {
 	public void setTrace(String trace) {
 		this.trace = trace;
 	}
-
 }

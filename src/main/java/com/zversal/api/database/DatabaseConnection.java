@@ -13,10 +13,6 @@ public class DatabaseConnection {
 	private ConfigProperties configproperties = new ConfigProperties();
 	private MongoCollection<Document> collection = null;
 
-	public DatabaseConnection() {
-		System.out.println("DatabaseConnection");
-	}
-
 	private void connection() {
 		System.out.println("Connection");
 		String databaseName = configproperties.getDatabaseName();

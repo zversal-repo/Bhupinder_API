@@ -6,8 +6,8 @@ import com.zversal.api.database.DatabaseOperation;
 
 @Service
 public class CompanyInfoService {
-  
-    private DatabaseOperation databaseOperation = new DatabaseOperation();
+
+	private DatabaseOperation databaseOperation = new DatabaseOperation();
 
 	public Document getData(String ticker) {
 		return databaseOperation.getData(ticker);

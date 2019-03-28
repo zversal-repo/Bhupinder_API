@@ -13,10 +13,6 @@ import com.mongodb.client.model.Projections;
 
 public class DatabaseOperation {
 
-	public DatabaseOperation() {
-		System.out.println("DatabaseOperation Constructor");
-	}
-
 	private DatabaseConnection connection = new DatabaseConnection();
 
 	private MongoCollection<Document> collection = connection.getCollections();
@@ -36,7 +32,6 @@ public class DatabaseOperation {
 
 					((Document) doc.get(keys[i])).remove(array[i][j]);
 					j++;
-
 				}
 			} catch (NullPointerException n) {
 				System.out.println("some elements of keys and array is not present in Document");
