@@ -18,7 +18,6 @@ public class DatabaseConnection {
 		String databaseName = configproperties.getDatabaseName();
 		String connectionString = configproperties.getUri();
 		String collectionName = configproperties.getCollection();
-
 		try {
 			MongoClient mongoClient = MongoClients.create(connectionString);
 			MongoDatabase database = mongoClient.getDatabase(databaseName);

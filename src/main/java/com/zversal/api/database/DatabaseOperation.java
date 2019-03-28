@@ -29,7 +29,6 @@ public class DatabaseOperation {
 			try {
 				int j = 0;
 				while (j != array[i].length) {
-
 					((Document) doc.get(keys[i])).remove(array[i][j]);
 					j++;
 				}
@@ -74,10 +73,8 @@ public class DatabaseOperation {
 						"Long Term Growth High", "Next FY %Growth", "No. of LTG", "Current FY %Growth",
 						"Two QTRs ACtual EPS", "Last FY Actual EPS", "Long Term Growth Low" },
 				{ "KEY 25", "KEY 26", "KEY 27", "KEY 28", "KEY 29", "KEY 30", "KEY31", "KEY32", "KEY33", "Company" } };
-		// Document basic = new Document("Ticker", ticker);
 
 		Document doc = findDoc(new Document("Ticker", ticker), keys).first();
-
 		if (doc == null) {
 			return new Document("Error:", "Ticker is not Present");
 		} else {
