@@ -18,17 +18,50 @@ public class ConfigProperties implements EnvironmentAware {
 	}
 
 	public String getDatabaseName() {
-		String databasename = env.getProperty("mongo.database");
+		String databasename = null;
+		try {
+			databasename = env.getProperty("mongo.database");
+			if (databasename.isEmpty()) {
+				System.out.println("DatabaseName is Empty ");
+				System.exit(1);
+			}
+		} catch (NullPointerException n) {
+			System.out.println("mongo.database property is not present in property file");
+			n.printStackTrace();
+			System.exit(1);
+		}
 		return databasename;
 	}
 
 	public String getUri() {
-		String uri = env.getProperty("mongo.uri");
+		String uri = null;
+		try {
+			uri = env.getProperty("mongo.uri");
+			if (uri.isEmpty()) {
+				System.out.println("Uri is Empty");
+				System.exit(1);
+			}
+		} catch (NullPointerException n) {
+			System.out.println("mongo.uri property is not present in property file");
+			n.printStackTrace();
+			System.exit(1);
+		}
 		return uri;
 	}
 
 	public String getCollection() {
-		String collectionName = env.getProperty("mongo.collection");
+		String collectionName = null;
+		try {
+			collectionName = env.getProperty("mongo.collection");
+			if (collectionName.isEmpty()) {
+				System.out.println("collectionName is Empty");
+				System.exit(1);
+			}
+		} catch (NullPointerException n) {
+			System.out.println("mongo.collection property is not present in property file");
+			n.printStackTrace();
+			System.exit(1);
+		}
 		return collectionName;
 	}
 

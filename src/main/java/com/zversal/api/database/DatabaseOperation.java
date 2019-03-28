@@ -5,50 +5,45 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.bson.Document;
-
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
 
 public class DatabaseOperation {
+
+	public DatabaseOperation() {
+		System.out.println("DatabaseOperation Constructor");
+	}
+
 	private DatabaseConnection connection = new DatabaseConnection();
 
 	private MongoCollection<Document> collection = connection.getCollections();
 
 	private FindIterable<Document> findDoc(Document basic, String[] include) {
-
 		FindIterable<Document> document = null;
-		try {
-			document = collection.find(basic)
-					.projection(Projections.fields(Projections.include(include), Projections.excludeId()));
-			// MongoCursor<Document> itr = document.iterator();
-		} catch (NullPointerException n) {
-			System.out.println("NullPointerException");
-		}
+		document = collection.find(basic)
+				.projection(Projections.fields(Projections.include(include), Projections.excludeId()));
 		return document;
 	}
 
-	private void removeDoc(String[] keys, String[][] array, Document doc) {
-		try {
-			for (int i = 0; i < keys.length; i++) {
+	private Document removeDoc(String[] keys, String[][] array, Document doc) {
+		for (int i = 0; i < keys.length; i++) {
+			try {
 				int j = 0;
-				while (j != -1) {
-					if (j == array[i].length) {
-						j = -1;
-					} else {
-						((Document) doc.get(keys[i])).remove(array[i][j]);
-						j++;
-					}
+				while (j != array[i].length) {
+
+					((Document) doc.get(keys[i])).remove(array[i][j]);
+					j++;
+
 				}
+			} catch (NullPointerException n) {
+				System.out.println("some elements of keys and array is not present in Document");
 			}
-		} catch (NullPointerException e) {
-			System.out.println("NO DOCUMENT OR CHECK KEYS CAREFULLY");
 		}
 
+		return doc;
 	}
 
 	public Document getData(String ticker) {
@@ -66,7 +61,12 @@ public class DatabaseOperation {
 			Document mdoc = itr.next();
 			listDoc.add(mdoc.get("Ticker"));
 		}
-		doc.put("Ticker", listDoc);
+		if (listDoc.isEmpty()) {
+			System.out.println(listDoc);
+			doc.put("Error:", "Ticker is not present");
+		} else {
+			doc.put("Ticker", listDoc);
+		}
 		return doc;
 	}
 
@@ -80,20 +80,28 @@ public class DatabaseOperation {
 						"Two QTRs ACtual EPS", "Last FY Actual EPS", "Long Term Growth Low" },
 				{ "KEY 25", "KEY 26", "KEY 27", "KEY 28", "KEY 29", "KEY 30", "KEY31", "KEY32", "KEY33", "Company" } };
 		// Document basic = new Document("Ticker", ticker);
+
 		Document doc = findDoc(new Document("Ticker", ticker), keys).first();
-		removeDoc(keys, array, doc);
-		return doc;
+
+		if (doc == null) {
+			return new Document("Error:", "Ticker is not Present");
+		} else {
+			return removeDoc(keys, array, doc);
+		}
 	}
 
 	public Document getSnapshot(String ticker) {
 		final String[] include = { "CZ2", "CZ3", "ZK3.Market cap", "CZ1.No of Employees" };
-		// Document basic= new Document("Ticker",ticker);
-		final Document doc = findDoc(new Document("Ticker", ticker), include).first();
 		final String[][] array = { { "SIC Code", "Company URL", "M-Industry Industry Description",
 				"Exchange Traded Code", "Unique ID", "Sector Description" } };
 		final String[] keys = { "CZ2" };
-		removeDoc(keys, array, doc);
-		return doc;
+		// Document basic= new Document("Ticker",ticker);
+		Document doc = findDoc(new Document("Ticker", ticker), include).first();
+		if (doc == null) {
+			return new Document("Error:", "Ticker is not Present");
+		} else {
+			return removeDoc(keys, array, doc);
+		}
 	}
 
 	public Document getStats(String ticker) {
@@ -129,7 +137,7 @@ public class DatabaseOperation {
 			if (appendDoc != null) {
 				doc.append(mapElement.getKey(), appendDoc);
 			} else {
-				doc = null;
+				doc.put("Error:", "Ticker is not present");
 			}
 		}
 		return doc;
